@@ -5,10 +5,10 @@ This project includes real-time UI updates, chart insights, offline storage usin
 
 ## Getting Started
 
- Features
- Secure Summary Visibility
+Features
 
-Toggle visibility for Total Balance, Total Income, and Total Expense with one switch.
+ Secure Summary Visibility
+ Toggle visibility for Total Balance, Total Income, and Total Expense with one switch.
 
 Keeps sensitive amounts hidden when needed.
 
@@ -26,7 +26,7 @@ Uses the flutter_bloc architecture for clean business logic.
 
 Real-time UI synchronization for all cards and expense tiles.
 
-🗃 Local Persistent Storage
+Local Persistent Storage
 
 Powered by Hive (lightweight NoSQL database).
 
