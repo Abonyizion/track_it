@@ -24,15 +24,16 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
 
-  String _selectedCategory = 'Food';
+  String _selectedCategory = 'Salary';
 
   final List<String> _categories = [
-    'Food',
-    'Transport',
+    'Salary',
+    'Transportation',
+    'Utilities',
     'Entertainment',
     'Shopping',
-    'Bills',
-    'Other',
+    'Health',
+    'Others',
   ];
 
   void _submit() {
@@ -65,7 +66,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               children: [
                 const SizedBox(
                     height: 20),
-                const Text("Title",
+                const Text("Source",
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600)),
@@ -73,7 +74,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     height: 6),
                 _roundedInputField(
                   controller: _titleController,
-                  hint: "Enter title (e.g., Dinner with friends)",
+                  hint: "Examples: Salary, Business, Gifts etc.)",
                   validator: (value) =>
                   value == null || value.isEmpty ? 'Enter a title' : null,
                 ),

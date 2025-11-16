@@ -65,7 +65,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               children: [
                 const SizedBox(
                     height: 20),
-                const Text("Title",
+                const Text("Title/Expense Name",
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600)),
@@ -73,7 +73,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     height: 6),
                 _roundedInputField(
                   controller: _titleController,
-                  hint: "Enter title (e.g., Dinner with friends)",
+                  hint: "Examples: Dinner, Groceries, Electricity etc.",
                   validator: (value) =>
                   value == null || value.isEmpty ? 'Enter a title' : null,
                 ),
