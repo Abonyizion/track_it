@@ -35,14 +35,24 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     'Other',
   ];
 
+  String? _titleError;
+  String? _amountError;
+
+
+
   void _submit() {
-    if (_formKey.currentState!.validate()) {
+    setState(() {
+      _titleError = _titleController.text.isEmpty ? 'Enter a title' : null;
+      _amountError = _amountController.text.isEmpty ? 'Enter an amount' : null;
+    });
+
+    if (_titleError == null && _amountError == null) {
       final expense = ExpenseModel(
         title: _titleController.text,
         amount: double.parse(_amountController.text),
         category: _selectedCategory,
         date: DateTime.now().toUtc(),
-        isIncome: false,
+        isIncome: true,
       );
 
       context.read<ExpenseBloc>().add(AddExpense(expense));
@@ -65,7 +75,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               children: [
                 const SizedBox(
                     height: 20),
-                const Text("Title/Expense Name",
+                const Text("Expense Name",
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600)),
@@ -73,9 +83,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     height: 6),
                 _roundedInputField(
                   controller: _titleController,
-                  hint: "Examples: Dinner, Groceries, Electricity etc.",
-                  validator: (value) =>
-                  value == null || value.isEmpty ? 'Enter a title' : null,
+                  hint: "E.g: Salary, Business, Gifts etc.",
+                  errorText: _titleError,
                 ),
                 const SizedBox(
                     height: 18),
@@ -90,10 +99,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   controller: _amountController,
                   hint: "\$ 0.00",
                   keyboardType: TextInputType.number,
-                  validator: (value) =>
-                  value == null || value.isEmpty ? 'Enter an amount' : null,
+                  errorText: _amountError,
                 ),
-
                 const SizedBox(
                     height: 18),
                 const Text("Category",
@@ -127,40 +134,53 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   Widget _roundedInputField({
     required TextEditingController controller,
     String? hint,
-    String? Function(String?)? validator,
+    String? errorText,
     TextInputType? keyboardType,
   }) {
-    return Container(
-      height: 52,
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.grey.shade900  // dark mode border
-              : AppColors.lightGrey,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.textDark.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 52,
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey.shade900
+                  : AppColors.lightGrey,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.textDark.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: TextFormField(
-        validator: validator,
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14),
-          hintText: hint,
-          hintStyle: TextStyle(fontSize: 12),
-          border: InputBorder.none,
+          child: TextField(
+            controller: controller,
+            keyboardType: keyboardType,
+            decoration: InputDecoration(
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              hintText: hint,
+              hintStyle: TextStyle(fontSize: 12, color: AppColors.grey),
+              border: InputBorder.none,
+            ),
+          ),
         ),
-      ),
+        if (errorText != null) ...[
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text(
+              errorText,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+        ]
+      ],
     );
   }
 

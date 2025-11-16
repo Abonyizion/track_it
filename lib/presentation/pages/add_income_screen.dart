@@ -26,18 +26,25 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
 
   String _selectedCategory = 'Salary';
 
+  String? _titleError;
+  String? _amountError;
+
+
   final List<String> _categories = [
     'Salary',
-    'Transportation',
-    'Utilities',
-    'Entertainment',
-    'Shopping',
-    'Health',
+    'Business',
+    'Gift',
+    'Investments',
     'Others',
   ];
 
   void _submit() {
-    if (_formKey.currentState!.validate()) {
+    setState(() {
+      _titleError = _titleController.text.isEmpty ? 'Enter a title' : null;
+      _amountError = _amountController.text.isEmpty ? 'Enter an amount' : null;
+    });
+
+    if (_titleError == null && _amountError == null) {
       final expense = ExpenseModel(
         title: _titleController.text,
         amount: double.parse(_amountController.text),
@@ -50,6 +57,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
       Navigator.pop(context);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +82,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     height: 6),
                 _roundedInputField(
                   controller: _titleController,
-                  hint: "Examples: Salary, Business, Gifts etc.)",
-                  validator: (value) =>
-                  value == null || value.isEmpty ? 'Enter a title' : null,
+                  hint: "E.g: Salary, Business, Gifts etc.",
+                  errorText: _titleError,
                 ),
                 const SizedBox(
                     height: 18),
@@ -91,9 +98,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   controller: _amountController,
                   hint: "\$ 0.00",
                   keyboardType: TextInputType.number,
-                  validator: (value) =>
-                  value == null || value.isEmpty ? 'Enter an amount' : null,
+                  errorText: _amountError,
                 ),
+
 
                 const SizedBox(
                     height: 18),
@@ -124,47 +131,58 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   }
 
 
-  // Rounded input field
   Widget _roundedInputField({
     required TextEditingController controller,
     String? hint,
-    String? Function(String?)? validator,
+    String? errorText,
     TextInputType? keyboardType,
   }) {
-    return Container(
-      height: 52,
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.grey.shade900  // dark mode border
-              : AppColors.lightGrey,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.textDark.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 52,
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey.shade900
+                  : AppColors.lightGrey,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.textDark.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: TextFormField(
-        validator: validator,
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14),
-          hintText: hint,
-          hintStyle: TextStyle(fontSize: 12),
-          border: InputBorder.none,
+          child: TextField(
+            controller: controller,
+            keyboardType: keyboardType,
+            decoration: InputDecoration(
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              hintText: hint,
+              hintStyle: TextStyle(fontSize: 12, color: AppColors.grey),
+              border: InputBorder.none,
+            ),
+          ),
         ),
-      ),
+        if (errorText != null) ...[
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text(
+              errorText,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+        ]
+      ],
     );
   }
-
 
 
 // Rounded dropdown
