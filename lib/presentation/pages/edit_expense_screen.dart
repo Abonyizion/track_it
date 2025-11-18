@@ -39,7 +39,7 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
     final picked = await showDatePicker(
       barrierColor: Theme.of(context).brightness == Brightness.dark
         ? AppColors.scaffoldBgDark // Dark mode color
-        : Colors.white,
+        : Colors.white24,
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1970),
@@ -69,7 +69,8 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyGradientAppBar(
-          title: "Edit Expense"),
+          title: widget.expense.isIncome ? "Edit Income" : "Edit Expense",
+      ),
       body: Padding(
         padding: GeneralConstants.scaffoldPadding,
         child: SingleChildScrollView(

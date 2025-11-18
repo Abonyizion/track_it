@@ -34,16 +34,21 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     'Bills',
     'Other',
   ];
-
-  String? _titleError;
-  String? _amountError;
-
-
+      //state variables
+      String? _titleError;
+      String? _amountError;
 
   void _submit() {
     setState(() {
-      _titleError = _titleController.text.isEmpty ? 'Enter a title' : null;
+      _titleError = _titleController.text.isEmpty ? 'Enter expense name' : null;
       _amountError = _amountController.text.isEmpty ? 'Enter an amount' : null;
+
+      if (_amountError == null) {
+        final parsedAmount = double.tryParse(_amountController.text);
+        if (parsedAmount == null) {
+          _amountError = "Enter a valid number";
+        }
+      }
     });
 
     if (_titleError == null && _amountError == null) {
@@ -52,13 +57,14 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         amount: double.parse(_amountController.text),
         category: _selectedCategory,
         date: DateTime.now().toUtc(),
-        isIncome: true,
+        isIncome: false,
       );
 
       context.read<ExpenseBloc>().add(AddExpense(expense));
       Navigator.pop(context);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +89,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     height: 6),
                 _roundedInputField(
                   controller: _titleController,
-                  hint: "E.g: Salary, Business, Gifts etc.",
+                  hint: "E.g: Groceries, Dinner, Bills etc.",
                   errorText: _titleError,
                 ),
                 const SizedBox(

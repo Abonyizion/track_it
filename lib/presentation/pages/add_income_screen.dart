@@ -26,10 +26,6 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
 
   String _selectedCategory = 'Salary';
 
-  String? _titleError;
-  String? _amountError;
-
-
   final List<String> _categories = [
     'Salary',
     'Business',
@@ -38,10 +34,20 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
     'Others',
   ];
 
+  String? _titleError;
+  String? _amountError;
+
   void _submit() {
     setState(() {
       _titleError = _titleController.text.isEmpty ? 'Enter a title' : null;
       _amountError = _amountController.text.isEmpty ? 'Enter an amount' : null;
+
+      if (_amountError == null) {
+        final parsedAmount = double.tryParse(_amountController.text);
+        if (parsedAmount == null) {
+          _amountError = "Enter a valid number";
+        }
+      }
     });
 
     if (_titleError == null && _amountError == null) {
